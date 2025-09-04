@@ -5,7 +5,7 @@
 This repository is designed for beginners to understand the **fundamentals of Spring Boot**.  
 It covers simple examples, annotations, dependencies, and how to run a Spring Boot application.  
 
----
+--- 
 
 ## 📌 What is Spring Boot?
 Spring Boot is a Java-based framework used to create stand-alone, production-ready Spring applications with minimal configuration.  
