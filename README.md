@@ -7,7 +7,7 @@ It covers simple examples, annotations, dependencies, and how to run a Spring Bo
 
 --- 
 
-## 📌 What is Spring Boot?
+## 📌 What is Spring Boot? 
 Spring Boot is a Java-based framework used to create stand-alone, production-ready Spring applications with minimal configuration.  
 It simplifies the development process by providing embedded servers (like Tomcat), auto-configuration, and starter dependencies.
 
