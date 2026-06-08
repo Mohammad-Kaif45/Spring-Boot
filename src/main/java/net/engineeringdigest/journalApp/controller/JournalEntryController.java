@@ -1,7 +1,9 @@
 package net.engineeringdigest.journalApp.controller;
 
 import net.engineeringdigest.journalApp.entity.JournalEntry;
+import net.engineeringdigest.journalApp.entity.User;
 import net.engineeringdigest.journalApp.service.JournalEntryService;
+import net.engineeringdigest.journalApp.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,16 +15,19 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/journal")
-public class JournalEntryControllerV2 {
+public class JournalEntryController {
 
 
     @Autowired
     private JournalEntryService journalEntryService;
 
+    @Autowired
+    private UserService userService;
 
-    @GetMapping
-    public ResponseEntity<?> getAll() {
-        List<JournalEntry> all = journalEntryService.getAll();
+    @GetMapping("{userName}")
+    public ResponseEntity<?> getAllJournalEntriesOfUser(@PathVariable String userName) {
+        User user = userService.findByUserName(userName);
+        List<JournalEntry> all = user.getJournalEntries();
         if (all != null && !all.isEmpty()) {
             return new ResponseEntity<>(all,HttpStatus.OK);
         }
@@ -30,11 +35,12 @@ public class JournalEntryControllerV2 {
 
     }
 
-    @PostMapping
-    public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry myEntry) {
+    @PostMapping("{userName}")
+    public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry myEntry,@PathVariable String userName) {
         try {
+
             myEntry.setDate(LocalDateTime.now());
-            journalEntryService.saveEntry(myEntry);
+            journalEntryService.saveEntry(myEntry,userName);
             return new ResponseEntity<>(myEntry, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -61,12 +67,12 @@ public class JournalEntryControllerV2 {
     @PutMapping("/id{id}")
     public ResponseEntity<?> updateJournalById(@PathVariable ObjectId id, @RequestBody JournalEntry newEntry) {
         JournalEntry old = journalEntryService.findById(id).orElse(null);
-        if (old != null) {
-            old.setTitle(newEntry.getTitle() != null && newEntry.getTitle().equals("")?newEntry.getTitle() : old.getTitle());
-            old.setContent(newEntry.getContent() != null && newEntry.equals("")? newEntry.getContent() : old.getContent());
-            journalEntryService.saveEntry(old);
-            return new ResponseEntity<>(old,HttpStatus.OK);
-        }
+//        if (old != null) {
+//            old.setTitle(newEntry.getTitle() != null && newEntry.getTitle().equals("")?newEntry.getTitle() : old.getTitle());
+//            old.setContent(newEntry.getContent() != null && newEntry.equals("")? newEntry.getContent() : old.getContent());
+//            journalEntryService.saveEntry(old, user);
+//            return new ResponseEntity<>(old,HttpStatus.OK);
+//        }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
     }
